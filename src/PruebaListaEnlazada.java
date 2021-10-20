@@ -28,27 +28,7 @@ class Nodo{
 	public String toString() {
 		return "Nodo [dato=" + dato + ", nodoSiguiente=" + nodoSiguiente + "]";
 	}
-	
-	
-	
-	
 }
-
-/*
- * Lista enlazada 
- * Operaciones basicas
- * 
- * 1) creacion
- * 2) Insertar
- * 		2a) Al inicio
- * 		2b) Al final
- * 		2c) En pocicion especifica
- * 3) Eliminar
- * 		3a) dato
- * 		3b) Posicion
- * 4) Mostrar o recorrer
- * 
- */
 
 class ListaEnlazada{
 	Nodo nodoInicio;
@@ -57,6 +37,12 @@ class ListaEnlazada{
 	// 1) Creacion
 	public ListaEnlazada() {
 		nodoInicio = nodoFin = null; // no es nesesario
+	}
+	
+	public boolean verificarListaVacia() {
+		if(nodoInicio == null)
+			return true;
+		else return false;
 	}
 	
 	// 2) Agregar elemento al inicio
@@ -69,6 +55,7 @@ class ListaEnlazada{
 			nodoNuevo.setNodoSiguiente(nodoInicio);
 			nodoInicio = nodoNuevo;
 		}
+		System.out.println("\nSe agrego el dato");
 	}
 	
 	// 2b) Agregar elemento al final
@@ -80,69 +67,32 @@ class ListaEnlazada{
 			nodoFin.setNodoSiguiente(nodoNuevo);
 			nodoFin = nodoNuevo;
 		}
+		System.out.println("\nSe agrego el dato");
 	}
 	
 	// 2c) Agregar elemento en posicion especifica
 	public void agregarElementoPosicionEspecifica(int dato, int posicion) {
 		Nodo nodoNuevo = new Nodo(dato);
-		int contPosicion = 0;
-		if(nodoInicio == null) {
-			nodoInicio = nodoFin = nodoNuevo;
+		if (posicion == 0) {
+			agregarElementoInicio(dato);
+		} else if (nodoInicio == null){
+			System.out.println("\nNo se encontro la posicion");
 		} else {
-			if (posicion == 0) {
-				agregarElementoInicio(dato);
-			} else {
-				Nodo nodoActual = nodoInicio.getNodoSiguiente();
-				Nodo nodoAnterior = nodoInicio;
-				
-				while(nodoActual != null) {
-					contPosicion++;
-					if(contPosicion == posicion) {
-						nodoAnterior.setNodoSiguiente(nodoNuevo);
-						nodoNuevo.setNodoSiguiente(nodoActual);
-						break;
-					} else {
-						// se recorren
-						nodoAnterior = nodoActual;
-						// nodoAnterior = nodoAnterior.getNodoSiguiente();
-						nodoActual = nodoActual.getNodoSiguiente();
-					}
-				}
-				//------------------------------------
-				if(nodoActual == null && contPosicion == posicion-1) {
-					agregarElementoFinal(dato);
-				} else {
-					//System.out.println("\nNo existe la pocicion");
-				}
+			Nodo nodoActual = nodoInicio.getNodoSiguiente();
+			Nodo nodoAnterior = nodoInicio;
+			int contPosicion = 1;
+			while(nodoActual != null && posicion != contPosicion) {
+				contPosicion++;
+				nodoAnterior = nodoAnterior.getNodoSiguiente();
+				nodoActual = nodoActual.getNodoSiguiente();
 			}
-		}
-	}
-	// 3a) Eliminar dato
-	public void eliminarDato(int dato) {
-		if (nodoInicio == null) {
-			System.out.println("\nLista vacia");
-		} else {
-			if(nodoInicio.getDato() == dato && nodoInicio == nodoFin) {
-				nodoInicio = nodoFin = null;
+			//------------------------------------
+			if(contPosicion == posicion) {
+				nodoAnterior.setNodoSiguiente(nodoNuevo);
+				nodoNuevo.setNodoSiguiente(nodoActual);
+				System.out.println("\nSe agrego el dato");
 			} else {
-				Nodo nodoActual = nodoInicio;
-				Nodo nodoAnterior = null;
-				
-				while(nodoActual != null) {
-					if(nodoActual.getDato() == dato) {
-						if(nodoAnterior != null) {
-							// se inserta en medio
-							nodoAnterior.setNodoSiguiente(nodoActual.getNodoSiguiente());
-						} else {
-							// dejan de apuntar al primer
-							nodoInicio = nodoActual.getNodoSiguiente();
-						}
-						break;
-					}else {
-						nodoAnterior = nodoActual;
-						nodoActual = nodoActual.getNodoSiguiente();
-					}
-				}
+				System.out.println("\nNo se encontro la posicion");
 			}
 		}
 	}
@@ -152,12 +102,12 @@ class ListaEnlazada{
 	public void eliminarInicio() {
 		if(nodoInicio == null) {
 			System.out.println("\nLista vacia");
+		} else if (nodoInicio == nodoFin){
+			nodoInicio = nodoFin = null;
+			System.out.println("\nDato eliminado");
 		} else {
-			if(nodoInicio == nodoFin) {
-				nodoInicio = nodoFin = null;
-			} else {
-				nodoInicio = nodoInicio.getNodoSiguiente();
-			}
+			nodoInicio = nodoInicio.getNodoSiguiente();
+			System.out.println("\nDato Eliminado");
 		}
 	}
 	
@@ -169,6 +119,7 @@ class ListaEnlazada{
 		} else {
 			if(nodoInicio == nodoFin) {
 				nodoInicio = nodoFin = null;
+				System.out.println("\nDato eliminado");
 			} else {
 				Nodo nodoActual = nodoInicio;
 				Nodo nodoAnterior = null;
@@ -178,6 +129,31 @@ class ListaEnlazada{
 				}
 				nodoAnterior.setNodoSiguiente(null);
 				nodoFin = nodoAnterior;
+				System.out.println("\nDato eliminado");
+			}
+		}
+	}
+	
+	// 3c) Eliminar dato especifico
+	public void eliminarDatoEspecifico(int dato) {
+		if(nodoInicio == null) {
+			System.out.println("\nLista vacia");
+		} else if(nodoInicio.getDato() == dato) {
+			nodoInicio = nodoInicio.getNodoSiguiente(); 
+			System.out.println("\nEliminado correctamente");
+		} else {
+			Nodo nodoAnterior = nodoInicio;
+			Nodo nodoActual = nodoInicio.getNodoSiguiente();
+			while(dato != nodoAnterior.getDato() && nodoActual.getNodoSiguiente() != null) {
+				nodoAnterior = nodoAnterior.getNodoSiguiente();
+				nodoActual = nodoActual.getNodoSiguiente();
+			}
+			
+			if(nodoActual.getDato() == dato) {
+				nodoAnterior.setNodoSiguiente(nodoActual.getNodoSiguiente());
+				System.out.println("\nSe elimino el dato");
+			} else {
+				System.out.println("\nNo se encontro el dato");
 			}
 		}
 	}
@@ -186,37 +162,37 @@ class ListaEnlazada{
 	
 	public void eliminarPosicionEspecifica(int posicion) {
 		if(nodoInicio == null) {
-			System.out.println("Lista vacia");
+			System.out.println("\nLista vacia");
 		} else if (nodoInicio == nodoFin) {
 			if(posicion == 0) {
 				nodoInicio = nodoFin = null;
+				System.out.println("\nDato Eliminado");
 			} else {
-				System.out.println("No existe esa posicion");
+				System.out.println("\nNo existe esa posicion");
 			}
 		} else {
-			int contPosicion = 0;
-			Nodo nodoAnterior = nodoInicio;
-			Nodo nodoActual = nodoInicio.getNodoSiguiente();
 			
 			if(posicion == 0) {
 				eliminarInicio();
 			} else {
-				while(nodoActual != null) {
+				int contPosicion = 1;
+				Nodo nodoAnterior = nodoInicio;
+				Nodo nodoActual = nodoInicio.getNodoSiguiente();
+				while(contPosicion != posicion && nodoActual.getNodoSiguiente() != null) {
 					contPosicion++;
-					if(contPosicion == posicion) {
-						nodoAnterior.setNodoSiguiente(nodoActual.getNodoSiguiente());
-						break;
-					} else {
-						nodoAnterior = nodoAnterior.getNodoSiguiente();
-						nodoActual = nodoActual.getNodoSiguiente();
-					}
+					nodoAnterior = nodoAnterior.getNodoSiguiente();
+					nodoActual = nodoActual.getNodoSiguiente();
+				}
+				
+				if(contPosicion == posicion) {
+					nodoAnterior.setNodoSiguiente(nodoActual.getNodoSiguiente());
+					System.out.println("\nDato eliminado");
+				} else {
+					System.out.println("\nNo se encontro la posicion");
 				}
 			}
-			
 		}
 	}
-	
-	// 4) Mostrar o recorrer
 	
 	public void mostrarListaEnlazada() {
 		Nodo nodoActual = nodoInicio;
@@ -253,21 +229,6 @@ public class PruebaListaEnlazada {
 		Scanner entrada = new Scanner(System.in);
 		int opcion = 0;
 		
-		/*
-		 * Lista enlazada 
-		 * Operaciones basicas
-		 * 
-		 * 1) creacion
-		 * 2) Insertar
-		 * 		2a) Al inicio
-		 * 		2b) Al final
-		 * 		2c) En pocicion especifica
-		 * 3) Eliminar
-		 * 		3a) dato
-		 * 		3b) Posicion
-		 * 4) Mostrar o recorrer
-		 * 
-		 */
 		int dato = 0;
 		int posicion = 0;
 		do {
@@ -309,7 +270,7 @@ public class PruebaListaEnlazada {
 			case 4:
 				System.out.println("Introduce dato a eliminar: ");
 				dato = entrada.nextInt();
-				le1.eliminarDato(dato);
+				le1.eliminarDatoEspecifico(dato);
 				break;
 				
 			case 5:
